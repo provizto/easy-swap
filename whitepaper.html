@@ -163,6 +163,72 @@
             header h3 { font-size: 0.95rem; }
             p { text-align: left; }
         }
+        
+        /* --- GAYA TOMBOL UNDUH PDF --- */
+.print-btn {
+    background-color: transparent;
+    color: #00f2c3;
+    border: 1px solid #00f2c3;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.print-btn:hover {
+    background-color: #00f2c3;
+    color: #03070d;
+    box-shadow: 0 0 15px rgba(0, 242, 195, 0.3);
+}
+
+/* --- ATURAN KHUSUS SAAT DICETAK / JADI PDF --- */
+@media print {
+    /* Sembunyikan tombol unduh dan tombol kembali agar tidak ikut tercetak */
+    .print-btn, .back-btn {
+        display: none !important;
+    }
+    
+    /* Ubah warna latar belakang menjadi putih dan teks menjadi hitam agar hemat tinta & rapi */
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+    }
+    
+    .whitepaper-card {
+        background-color: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    header h1 {
+        background: none !important;
+        -webkit-text-fill-color: #000000 !important;
+        color: #000000 !important;
+    }
+
+    header h3 {
+        color: #008066 !important; /* Warna hijau lebih gelap agar terbaca di kertas */
+    }
+
+    h4 {
+        color: #000000 !important;
+        border-left: 4px solid #008066 !important;
+    }
+
+    p, li {
+        color: #2d3748 !important; /* Teks abu-abu gelap standar dokumen */
+    }
+
+    li::before {
+        color: #008066 !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -216,6 +282,8 @@
         <footer class="nav-footer">
             <a href="index.html" class="back-btn">← Kembali ke Beranda</a>
             <span class="version-tag">Dokumen v1.0 (Bahasa Indonesia)</span>
+            <!-- Tombol Unduh PDF Kustom -->
+<button class="print-btn" onclick="window.print()">📥 Unduh PDF</button>
         </footer>
     </article>
 
