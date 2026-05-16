@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoniq Finance - App Dashboard</title>
+    <style>
+        /* --- CORE CONFIGURATION --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #03070d; /* Ultra Dark Background */
+            color: #ffffff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: 260px;
+            background-color: #050b14;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #00f2c3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            padding-left: 10px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item a {
+            display: block;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active a, .nav-item a:hover {
+            background: rgba(0, 242, 195, 0.1);
+            color: #00f2c3;
+        }
+
+        /* --- MAIN DASHBOARD CONTAINER --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* Top Header Board */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .app-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .wallet-btn {
+            background: linear-gradient(135deg, #0066ff, #00f2c3);
+            color: #03070d;
+            border: none;
+            padding: 12px 24px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 242, 195, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* --- METRICS GRID (KARTU STATISTIK) --- */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: rgba(5, 11, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .metric-card p {
+            color: #a0aec0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .metric-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .text-green { color: #00f2c3; }
+
+        /* --- INTERACTION ZONE (STAKING & COLLATERAL) --- */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .action-card {
+            background: rgba(5, 11, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 35px;
+            border-radius: 16px;
+        }
+
+        .action-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #a0aec0;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .input-box-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box-wrapper input {
+            width: 100%;
+            background-color: #03070d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 16px;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .input-box-wrapper input:focus {
+            border-color: #00f2c3;
+        }
+
+        .token-badge {
+            position: absolute;
+            right: 15px;
+            font-weight: 700;
+            color: #00f2c3;
+        }
+
+        .action-btn {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #00f2c3;
+            color: #03070d;
+            border-color: #00f2c3;
+            font-weight: 700;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 968px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+            .action-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SISI KIRI: MENU NAVIGASI APP -->
+    <aside class="sidebar">
+        <div class="brand-logo">ZONIQ FINANCE</div>
+        <ul class="nav-links">
+            <li class="nav-item active"><a href="#">Dashboard</a></li>
+            <li class="nav-item"><a href="#">Staking Kolam</a></li>
+            <li class="nav-item"><a href="#">Agunan RWA</a></li>
+            <li class="nav-item"><a href="#">Tata Kelola (DAO)</a></li>
+        </ul>
+    </aside>
+
+    <!-- SISI KANAN: KONTEN UTAMA DASHBOARD -->
+    <main class="main-content">
+        <header class="app-header">
+            <div>
+                <h1>Ringkasan Dasbor</h1>
+            </div>
+            <!-- Tombol Koneksi Web3 / Rekomendasi Account Abstraction -->
+            <button class="wallet-btn">Hubungkan Dompet</button>
+        </header>
+
+        <!-- GRID STATISTIK UTAMA -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <p>Harga $ZNQ</p>
+                <h2>$0.0100</h2>
+            </div>
+            <div class="metric-card">
+                <p>Total Nilai Terkunci (TVL)</p>
+                <h2 class="text-green">$1,245,000</h2>
+            </div>
+            <div class="metric-card">
+                <p>Agunan RWA Aktif Anda</p>
+                <h2>$0.00</h2>
+            </div>
+            <div class="metric-card">
+                <p>Estimasi APY Staking</p>
+                <h2 class="text-green">24.5%</h2>
+            </div>
+        </section>
+
+        <!-- PANEL INTERAKSI FITUR -->
+        <section class="action-grid">
+            <!-- PANEL STAKING -->
+            <div class="action-card">
+                <h3>Kunci Token $ZNQ</h3>
+                <div class="input-group">
+                    <label>Jumlah untuk di-Staking</label>
+                    <div class="input-box-wrapper">
+                        <input type="number" placeholder="0.0">
+                        <span class="token-badge">ZNQ</span>
+                    </div>
+                </div>
+                <button class="action-btn">Mulai Staking</button>
+            </div>
+
+            <!-- PANEL INTEGRASI AGUNAN SILANG RWA -->
+            <div class="action-card">
+                <h3>Ajukan Jaminan RWA</h3>
+                <div class="input-group">
+                    <label>Nilai Tokenisasi Aset Fisik</label>
+                    <div class="input-box-wrapper">
+                        <input type="number" placeholder="0.0">
+                        <span class="token-badge">USD</span>
+                    </div>
+                </div>
+                <button class="action-btn">Kunci sebagai Agunan</button>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
