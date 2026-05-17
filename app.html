@@ -411,37 +411,6 @@
             if (lang === 'id') document.getElementById('btn-lang-id').classList.add('active');
             if (lang === 'en') document.getElementById('btn-lang-en').classList.add('active');
         }
-
-        // 3. LOGIKA INTERAKSI METAMASK
-        const walletBtn = document.getElementById('btn-connect');
-
-        async function connectWallet() {
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    walletBtn.innerText = appTranslations[currentLang].btnConnecting;
-                    
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    walletAddress = accounts[0];
-                    isConnected = true;
-                    
-                    // Format alamat dompet agar ringkas (Contoh: 0x1234...abcd)
-                    const formatted = walletAddress.substring(0, 6) + "..." + walletAddress.substring(walletAddress.length - 4);
-                    
-                    walletBtn.innerText = formatted;
-                    walletBtn.style.background = "#00f2c3";
-                    walletBtn.style.color = "#03070d";
-                } catch (error) {
-                    console.error("Koneksi dibatalkan:", error);
-                    isConnected = false;
-                    walletBtn.innerText = appTranslations[currentLang].btnConnect;
-                }
-            } else {
-                alert(appTranslations[currentLang].metaError);
-                walletBtn.innerText = appTranslations[currentLang].btnConnect;
-            }
-        }
-
-        walletBtn.addEventListener('click', connectWallet);
     </script>
     
     <!-- 1. Muat SDK Widget Gabungan dari CDN Resmi -->
