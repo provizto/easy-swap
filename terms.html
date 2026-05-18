@@ -34,7 +34,7 @@
             margin-bottom: 40px;
         }
         
-        /* TOGGLE SWITCH STYLING (AT THE VERY TOP) */
+        /* TOGGLE SWITCH STYLING AT THE VERY TOP */
         .toggle-container {
             display: flex;
             justify-content: center;
@@ -174,7 +174,7 @@
 
     <!-- CONTENT AREA -->
     <div id="content-grid" class="grid">
-        <!-- BAHASA INDONESIA (HIDDEN BY DEFAULT) -->
+        <!-- BAHASA INDONESIA -->
         <section id="sect-id" class="lang-section hidden" lang="id">
             <h2 class="lang-title">Ketentuan Layanan</h2>
             <ol>
@@ -201,7 +201,7 @@
             </ol>
         </section>
 
-        <!-- ENGLISH TRANSLATION (VISIBLE BY DEFAULT) -->
+        <!-- ENGLISH TRANSLATION -->
         <section id="sect-en" class="lang-section" lang="en">
             <h2 class="lang-title">Terms of Service</h2>
             <ol>
@@ -231,25 +231,66 @@
 </div>
 
 <script>
-    function toggleLanguage() {
+    // FUNGSI COOKIE MANAGEMENT
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        // SameSite=Strict ditambahkan untuk keamanan data Web3/Finance Anda
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Strict";
+    }
+
+    function getCookie(name) {
+        let nameEQ = name + "=";
+        let ca = document.cookie.split(';');
+        for(let i=0;i < ca.length;i++) {
+            let c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    // FUNGSI UTAMA UNTUK UPDATE TAMPILAN
+    function applyLanguage(lang) {
         const toggle = document.getElementById('langToggle');
         const sectId = document.getElementById('sect-id');
         const sectEn = document.getElementById('sect-en');
 
-        if (toggle.classList.contains('active-en')) {
-            // Geser ke kiri (Indonesia)
+        if (lang === 'id') {
             toggle.classList.remove('active-en');
             toggle.classList.add('active-id');
             sectId.classList.remove('hidden');
             sectEn.classList.add('hidden');
         } else {
-            // Geser ke kanan (English)
             toggle.classList.remove('active-id');
             toggle.classList.add('active-en');
             sectId.classList.add('hidden');
             sectEn.classList.remove('hidden');
         }
     }
+
+    // INTERAKSI SAAT TOMBOL DIKLIK
+    function toggleLanguage() {
+        const toggle = document.getElementById('langToggle');
+        let currentLang = toggle.classList.contains('active-en') ? 'id' : 'en';
+        
+        applyLanguage(currentLang);
+        setCookie('oniq_lang', currentLang, 30); // Menyimpan pilihan selama 30 hari
+    }
+
+    // PEMERIKSAAN COOKIE SAAT HALAMAN DI-REFRESH
+    window.onload = function() {
+        let savedLang = getCookie('oniq_lang');
+        if (savedLang) {
+            applyLanguage(savedLang);
+        } else {
+            applyLanguage('en'); // Default ke EN jika belum ada cookie
+        }
+    };
 </script>
 
 </body>
