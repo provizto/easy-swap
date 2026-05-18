@@ -1,575 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoniq Finance - Layer-2 DeFi-RWA Aggregator</title>
+    <title>ZONIQ Finance - The Capital Efficiency Hub on Base</title>
+    <!-- Tailwind CSS via CDN untuk kemudahan integrasi -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- Font Inter dari Google Fonts -->
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #030e12;
-            --text-color: #94a3b8;
-            --title-color: #ffffff;
-            --accent-color: #00f2fe;
-            --accent-gradient: linear-gradient(135deg, #0072ff 0%, #00f2fe 100%);
-            --card-bg: #07161c;
-            --border-color: #12252e;
-            --toggle-bg: #07161c;
-            --toggle-handle: #00f2fe;
-            --toggle-text-active: #030e12;
-            --line-color: #00f2fe;
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            box-sizing: border-box;
-        }
-
-        /* 1. TOGGLE SWITCH STYLING */
-        .toggle-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 60px;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 140px;
-            height: 40px;
-            background-color: var(--toggle-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .switch-label {
-            position: absolute;
-            top: 0;
-            width: 70px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            z-index: 2;
-            transition: color 0.3s;
-        }
-        .switch-label.label-id { left: 0; }
-        .switch-label.label-en { right: 0; }
-        .switch-handle {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 66px;
-            height: 34px;
-            background: var(--accent-gradient);
-            border-radius: 18px;
-            z-index: 1;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .switch.active-id .label-id { color: var(--toggle-text-active); }
-        .switch.active-en .label-en { color: var(--toggle-text-active); }
-        .switch.active-en .switch-handle { transform: translateX(68px); }
-
-        /* 2. HERO LAYOUT */
-        .hero-layout {
-            display: grid;
-            grid-template-columns: 1fr;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 80px;
-        }
-        @media (min-width: 768px) {
-            .hero-layout { grid-template-columns: 1.2fr 0.8fr; }
-        }
-        .hero-left h1 {
-            color: var(--title-color);
-            font-size: 3rem;
-            font-weight: 800;
-            margin: 0 0 20px 0;
-            line-height: 1.2;
-        }
-        .hero-left p {
-            font-size: 1rem;
-            color: #64748b;
-            margin-bottom: 40px;
-            max-width: 540px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            background-color: rgba(0, 242, 254, 0.07);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            border-radius: 20px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-        }
-        .cta-group { display: flex; gap: 15px; flex-wrap: wrap; }
-        .btn { display: inline-block; padding: 12px 28px; font-size: 0.9rem; font-weight: 700; border-radius: 6px; text-decoration: none; transition: all 0.3s ease; }
-        
-        .btn-primary { color: #030e12; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2); }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4); }
-
-        /* UPDATED: COLORED ONE-PAGER BUTTON STYLE */
-        .btn-secondary { 
-            color: var(--accent-color); 
-            border: 1px solid rgba(0, 242, 254, 0.4); 
-            background-color: rgba(0, 242, 254, 0.04);
-            box-shadow: 0 4px 12px rgba(0, 242, 254, 0.05);
-        }
-        .btn-secondary:hover {
-            background-color: rgba(0, 242, 254, 0.08);
-            border-color: var(--accent-color);
-            transform: translateY(-1px);
-        }
-
-        /* UPDATED: OFFICIAL LOGO DISPLAY */
-        .hero-right {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .logo-display {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 3. FEATURES/PILAR SECTION */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 100px;
-        }
-        .feature-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 35px 30px;
-            box-sizing: border-box;
-        }
-        .feature-card.highlighted {
-            border-color: rgba(0, 242, 254, 0.4);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.05);
-        }
-        .feature-icon-box {
-            width: 36px; height: 36px; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 25px; font-size: 1.2rem;
-        }
-        .icon-gas { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        .icon-rwa { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        .icon-email { background-color: rgba(236, 72, 153, 0.1); color: #ec4899; }
-        .feature-card h3 { color: var(--title-color); font-size: 1.25rem; font-weight: 700; margin: 0 0 15px 0; }
-        .feature-card p { font-size: 0.9rem; color: #64748b; margin: 0; }
-
-        /* 4. TOKENOMICS SECTION */
-        .tokenomics-section { margin-bottom: 100px; }
-        .tokenomics-section h2 { color: var(--title-color); font-size: 2rem; font-weight: 800; margin: 0 0 15px 0; }
-        .tokenomics-section > p { font-size: 0.95rem; color: #64748b; max-width: 600px; margin: 0 0 40px 0; }
-        .tokenomics-content { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
-        @media (min-width: 768px) { .tokenomics-content { grid-template-columns: 1.1fr 0.9fr; } }
-        .legend-list { display: flex; flex-direction: column; gap: 16px; }
-        .legend-item { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; color: var(--title-color); font-weight: 600; }
-        .legend-color { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-        .c-public { background-color: #00f2fe; }
-        .c-staking { background-color: #0072ff; }
-        .c-dev { background-color: #b91c1c; }
-        .c-private { background-color: #ec4899; }
-        .c-team { background-color: #475569; }
-        .legend-item span { color: #64748b; font-weight: 400; }
-        .pie-chart-wrapper { display: flex; justify-content: center; align-items: center; }
-        .pie-chart {
-            width: 240px; height: 240px; border-radius: 50%;
-            background: conic-gradient(#00f2fe 0% 40%, #0072ff 40% 65%, #b91c1c 65% 80%, #ec4899 80% 90%, #475569 90% 100%);
-            position: relative; display: flex; align-items: center; justify-content: center;
-        }
-        .pie-center { width: 130px; height: 130px; background-color: var(--bg-color); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .pie-center .amount { color: var(--title-color); font-size: 1.4rem; font-weight: 800; }
-        .pie-center .token-name { color: var(--accent-color); font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
-
-        /* 5. STRATEGIC ROADMAP SECTION */
-        .roadmap-section { padding: 20px 0 60px 0; position: relative; }
-        .roadmap-section h2 { color: var(--title-color); font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 60px; }
-        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
-        .timeline::after { content: ''; position: absolute; width: 2px; background-color: var(--border-color); top: 0; bottom: 0; left: 50%; margin-left: -1px; z-index: 1; }
-        .timeline-container { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; box-sizing: border-box; z-index: 2; }
-        .timeline-container::after { content: ''; position: absolute; width: 14px; height: 14px; right: -8px; top: 38px; border-radius: 50%; background-color: var(--bg-color); border: 3px solid #00f2fe; z-index: 3; }
-        .timeline-container.right::after { left: -8px; border-color: #0072ff; }
-        .timeline-container.left { left: 0; text-align: right; }
-        .timeline-container.right { left: 50%; text-align: left; }
-        .roadmap-box { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; position: relative; }
-        .q-badge { display: inline-block; padding: 4px 10px; font-size: 0.65rem; font-weight: 800; color: #00f2fe; background-color: rgba(0, 242, 254, 0.08); border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-        .right .q-badge { color: #0072ff; background-color: rgba(0, 114, 255, 0.08); }
-        .roadmap-box h3 { color: var(--title-color); font-size: 1.2rem; font-weight: 700; margin: 0 0 15px 0; }
-        .roadmap-list { margin: 0; padding: 0; list-style: none; font-size: 0.9rem; color: #64748b; }
-        .roadmap-list li { margin-bottom: 10px; position: relative; }
-        .left .roadmap-list li { padding-right: 15px; }
-        .right .roadmap-list li { padding-left: 15px; }
-        .left .roadmap-list li::after { content: '–'; position: absolute; right: 0; top: 0; color: #475569; }
-        .right .roadmap-list li::before { content: '–'; position: absolute; left: 0; top: 0; color: #475569; }
-        .roadmap-list li:last-child { margin-bottom: 0; }
-
-        @media screen and (max-width: 767px) {
-            .timeline::after { left: 20px; }
-            .timeline-container { width: 100%; padding-left: 50px; padding-right: 0; text-align: left !important; }
-            .timeline-container::after { left: 12px !important; top: 38px; }
-            .timeline-container.left { left: 0; }
-            .timeline-container.right { left: 0; }
-            .roadmap-list li { padding-left: 15px !important; padding-right: 0 !important; }
-            .roadmap-list li::after { display: none; }
-            .roadmap-list li::before { content: '–'; position: absolute; left: 0; top: 0; display: block; }
-        }
-
-        /* 6. GLOBAL FOOTER */
-        footer {
-            margin-top: 60px;
-            padding: 30px 0;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            font-size: 0.85rem;
-            color: #475569;
-        }
-        @media (min-width: 480px) { footer { flex-direction: row; } }
-        footer .copyright { font-weight: 500; }
-        footer .footer-link { color: var(--accent-color); text-decoration: none; font-weight: 600; transition: color 0.2s; }
-        footer .footer-link:hover { color: #0072ff; text-decoration: underline; }
-
-        /* FILTERS ARCHITECTURE */
-        .lang-section { animation: fadeIn 0.4s ease; }
-        .lang-section.hidden { display: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body>
+<body class="bg-[#0b0f19] text-gray-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
 
-<div class="container">
-    
-    <!-- TOGGLE SWITCH ON TOP -->
-    <div class="toggle-container">
-        <div id="langToggle" class="switch active-en" onclick="toggleLanguage()">
-            <div class="switch-label label-id">ID</div>
-            <div class="switch-label label-en">EN</div>
-            <div class="switch-handle"></div>
+    <!-- NAVIGATION BAR -->
+    <header class="border-b border-gray-800/80 bg-[#0b0f19]/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center font-bold text-white text-lg shadow-lg shadow-blue-500/20">Z</div>
+                <span class="text-xl font-bold tracking-tight text-white">ZONIQ<span class="text-blue-500">.</span></span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+                <a href="#" class="text-white hover:text-blue-400 transition-colors">DEX</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Vaults</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">veZNQ Governance</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Whitepaper</a>
+            </nav>
+            <div>
+                <button class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-medium text-sm px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg shadow-blue-600/20">
+                    Connect Wallet
+                </button>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <!-- ================= 1. ENGLISH SECTION ================= -->
-    <div id="sect-en" class="lang-section" lang="en">
-        <!-- Hero Section -->
-        <section class="hero-layout">
-            <div class="hero-left">
-                <span class="badge">Layer-2 DeFi-RWA Aggregator</span>
-                <h1>Zoniq Finance: DeFi as Simple as Email.</h1>
-                <p>A low-cost DeFi-RWA aggregator protocol deployed on Base &amp; Arbitrum networks. Leverage your real-world assets permissionlessly to unlock instant liquidity with gas fees under $0.01.</p>
-                <div class="cta-group">
-                    <a href="app.html" class="btn btn-primary">Launch App</a>
-                    <a href="whitepaper.html" class="btn btn-secondary">Read One-Pager</a>
+    <main class="flex-grow">
+        <!-- HERO SECTION -->
+        <section class="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center md:text-left grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full text-xs font-semibold text-blue-400 tracking-wide uppercase">
+                    🚀 Now Native on Base Layer 2
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                    The Capital Efficiency <br class="hidden lg:block">Hub on <span class="gradient-text">Base Blockchain</span>
+                </h1>
+                <p class="text-base md:text-lg text-gray-400 max-w-xl leading-relaxed">
+                    Trade with low slippage, automate your compounding yield, and earn real protocol revenue in USDC by locking <span class="text-white font-semibold">$ZNQ</span>.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-4">
+                    <button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-blue-600/20 transition-all duration-300">
+                        Launch App
+                    </button>
+                    <button class="w-full sm:w-auto bg-gray-800/60 hover:bg-gray-800 text-gray-300 border border-gray-700/60 font-semibold px-8 py-3.5 rounded-xl transition-all duration-300">
+                        Read Whitepaper
+                    </button>
                 </div>
             </div>
-            <div class="hero-right">
-                <!-- Ganti logo.png dengan file gambar logo resmi Anda -->
-                <img src="logo.png" alt="Zoniq Finance Official Logo" class="logo-display">
-            </div>
-        </section>
-
-        <!-- Innovation Pillars -->
-        <section class="features-grid">
-            <div class="feature-card highlighted">
-                <div class="feature-icon-box icon-gas">⛽</div>
-                <h3>99% Gas Fee Savings</h3>
-                <p>Fully backed by Layer-2 architecture (Base &amp; Arbitrum) to ensure every transaction runs instantly with fees under $0.01.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon-box icon-rwa">🔄</div>
-                <h3>RWA Cross-Collateral</h3>
-                <p>Securely utilize tokenized real-world assets as collateral in the DeFi money markets without traditional bureaucratic barriers.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon-box icon-email">✉</div>
-                <h3>Log In via Email</h3>
-                <p>Eliminate seed phrase complexities. Create your new Web3 wallet in seconds using your trusted Google or Apple accounts.</p>
-            </div>
-        </section>
-
-        <!-- Tokenomics -->
-        <section class="tokenomics-section">
-            <h2>$ZNQ Tokenomics Allocation</h2>
-            <p>Total Zoniq Finance supply is capped at 100,000,000 $ZNQ with an automated deflationary mechanism to secure long-term ecosystem value.</p>
-            <div class="tokenomics-content">
-                <div class="legend-list">
-                    <div class="legend-item"><div class="legend-color c-public"></div>40% <span>- Public &amp; Liquidity (DEX/CEX)</span></div>
-                    <div class="legend-item"><div class="legend-color c-staking"></div>25% <span>- Staking &amp; Ecosystem Incentives</span></div>
-                    <div class="legend-item"><div class="legend-color c-dev"></div>15% <span>- Development &amp; Marketing</span></div>
-                    <div class="legend-item"><div class="legend-color c-private"></div>10% <span>- Private / Seed Sale</span></div>
-                    <div class="legend-item"><div class="legend-color c-team"></div>10% <span>- Team &amp; Advisors Allocation (Vesting)</span></div>
-                </div>
-                <div class="pie-chart-wrapper">
-                    <div class="pie-chart">
-                        <div class="pie-center">
-                            <span class="amount">100M</span>
-                            <span class="token-name">$ZNQ</span>
+            <!-- Visual Anchor / Placeholder Animasi -->
+            <div class="flex justify-center items-center relative">
+                <div class="absolute w-72 h-72 bg-blue-500/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+                <div class="absolute w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl -z-10 animate-pulse delay-75"></div>
+                <div class="w-80 h-80 rounded-3xl border border-gray-800 bg-gradient-to-br from-gray-900/60 to-gray-900/20 backdrop-blur-sm flex items-center justify-center shadow-2xl">
+                    <!-- Icon grafis simulasi visual DeFi -->
+                    <div class="relative w-40 h-40 border-4 border-dashed border-gray-800 rounded-full flex items-center justify-center animate-[spin_60s_linear_infinite]">
+                        <div class="absolute -top-3 w-6 h-6 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
+                        <div class="absolute -bottom-3 w-6 h-6 bg-cyan-500 rounded-full shadow-lg shadow-cyan-500/50"></div>
+                        <div class="w-24 h-24 border-4 border-blue-500/30 rounded-full flex items-center justify-center">
+                            <span class="text-3xl font-bold gradient-text">$ZNQ</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Strategic Roadmap -->
-        <section class="roadmap-section">
-            <h2>Strategic Roadmap</h2>
-            <p class="roadmap-subtitle" id="rm-sub">Timeline of the Zoniq Finance ecosystem execution and development plan globally.</p>
-            <div class="timeline">
-                <div class="timeline-container left">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Quarter 1</span>
-                        <h3>Foundation &amp; Security</h3>
-                        <ul class="roadmap-list">
-                            <li>Security audit of $ZNQ token smart contract.</li>
-                            <li>Official website &amp; One-Pager launch.</li>
-                            <li>Token deployment on the test network (Testnet).</li>
-                        </ul>
-                    </div>
+        <!-- LIVE DATA DASHBOARD -->
+        <section class="max-w-7xl mx-auto px-6 py-12 border-y border-gray-900 bg-gray-900/10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Value Locked (TVL)</p>
+                    <p class="text-2xl md:text-3xl font-bold text-white tracking-tight">$42,851,204</p>
                 </div>
-                <div class="timeline-container right">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Quarter 2</span>
-                        <h3>Access &amp; Liquidity</h3>
-                        <ul class="roadmap-list">
-                            <li>App login integration via social/email accounts.</li>
-                            <li>Token deployment on main network (Mainnet DEX).</li>
-                            <li>Launch of initial staking program &amp; incentive rewards.</li>
-                        </ul>
-                    </div>
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">24h Trading Volume</p>
+                    <p class="text-2xl md:text-3xl font-bold text-white tracking-tight">$12,405,119</p>
                 </div>
-                <div class="timeline-container left">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Quarter 3</span>
-                        <h3>RWA Protocol &amp; Collateral</h3>
-                        <ul class="roadmap-list">
-                            <li>First wave of real-world asset (RWA) tokenization.</li>
-                            <li>Cross-Collateral module deployment.</li>
-                            <li>Partnership with regulated physical custodian providers.</li>
-                        </ul>
-                    </div>
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Real Yield Distributed</p>
+                    <p class="text-2xl md:text-3xl font-bold text-cyan-400 tracking-tight">854,230 USDC</p>
                 </div>
-                <div class="timeline-container right">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Quarter 4</span>
-                        <h3>Expansion &amp; Mass Scale</h3>
-                        <ul class="roadmap-list">
-                            <li>Listing of $ZNQ token on global crypto exchanges (CEX).</li>
-                            <li>Pay gas fees directly with USDC/USDT stablecoins.</li>
-                            <li>Full transition to community governance system (DAO).</li>
-                        </ul>
-                    </div>
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">$ZNQ Locked</p>
+                    <p class="text-2xl md:text-3xl font-bold text-blue-400 tracking-tight">64.2%</p>
                 </div>
             </div>
         </section>
-    </div>
 
-    <!-- ================= 2. BAHASA INDONESIA SECTION ================= -->
-    <div id="sect-id" class="lang-section hidden" lang="id">
-        <!-- Hero Section -->
-        <section class="hero-layout">
-            <div class="hero-left">
-                <span class="badge">Agregator DeFi-RWA Layer-2</span>
-                <h1>Zoniq Finance: DeFi Semudah Pakai Email.</h1>
-                <p>Protokol agregator DeFi-RWA berbiaya rendah di jaringan Base &amp; Arbitrum. Jaminkan aset dunia nyata Anda secara permissionless untuk mendapatkan likuiditas instan dengan biaya gas di bawah $0.01.</p>
-                <div class="cta-group">
-                    <a href="app.html" class="btn btn-primary">Buka Aplikasi</a>
-                    <a href="whitepaper.html" class="btn btn-secondary">Baca One-Pager</a>
-                </div>
+        <!-- CORE PRODUCTS SHOWCASE -->
+        <section class="max-w-7xl mx-auto px-6 py-24 space-y-12">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Engineered for L2 Ecosystem</h2>
+                <p class="text-gray-400">Dua lini produk DeFi murni berkecepatan tinggi yang bekerja secara sinergis dalam satu protokol penampung.</p>
             </div>
-            <div class="hero-right">
-                <img src="logo.png" alt="Logo Resmi Zoniq Finance" class="logo-display">
-            </div>
-        </section>
-
-        <!-- Pilar Inovasi -->
-        <section class="features-grid">
-            <div class="feature-card highlighted">
-                <div class="feature-icon-box icon-gas">⛽</div>
-                <h3>Gas Fee Hemat 99%</h3>
-                <p>Didukung penuh oleh arsitektur Layer-2 (Base &amp; Arbitrum) untuk memastikan setiap transaksi berjalan instan dengan biaya di bawah $0.01.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon-box icon-rwa">🔄</div>
-                <h3>Jaminan Silang RWA</h3>
-                <p>Gunakan aset dunia nyata yang telah ditokenisasi secara aman sebagai agunan di pasar uang DeFi tanpa batas birokrasi tradisional.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon-box icon-email">✉</div>
-                <h3>Masuk Lewat Email</h3>
-                <p>Hilangkan kerumitan seed phrase. Buat dompet Web3 baru Anda dalam hitungan detik menggunakan akun Google atau Apple Anda.</p>
-            </div>
-        </section>
-
-        <!-- Tokenomics -->
-        <section class="tokenomics-section">
-            <h2>Alokasi Tokenomik $ZNQ</h2>
-            <p>Total pasokan Zoniq Finance dibatasi sebanyak 100.000.000 $ZNQ dengan mekanisme deflasioner otomatis untuk menjaga nilai ekosistem jangka panjang.</p>
-            <div class="tokenomics-content">
-                <div class="legend-list">
-                    <div class="legend-item"><div class="legend-color c-public"></div>40% <span>- Publik &amp; Likuiditas (DEX/CEX)</span></div>
-                    <div class="legend-item"><div class="legend-color c-staking"></div>25% <span>- Staking &amp; Insentif Ekosistem</span></div>
-                    <div class="legend-item"><div class="legend-color c-dev"></div>15% <span>- Pengembangan &amp; Pemasaran</span></div>
-                    <div class="legend-item"><div class="legend-color c-private"></div>10% <span>- Private / Seed Sale</span></div>
-                    <div class="legend-item"><div class="legend-color c-team"></div>10% <span>- Alokasi Tim &amp; Penasihat (Vesting)</span></div>
-                </div>
-                <div class="pie-chart-wrapper">
-                    <div class="pie-chart">
-                        <div class="pie-center">
-                            <span class="amount">100M</span>
-                            <span class="token-name">$ZNQ</span>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Product Card 1: DEX -->
+                <div class="group border border-gray-800/80 bg-gray-900/20 hover:bg-gray-900/40 p-8 rounded-2xl transition-all duration-300 hover:border-blue-500/30 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                            <svg xmlns="http://w3.org" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                         </div>
+                        <h3 class="text-xl font-bold text-white">ZONIQ AMM DEX</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Eksekusi perdagangan aset instan dengan biaya bahan bakar (gas fee) super murah khas jaringan Base. Menyediakan sistem penampung Stable Pools untuk meminimalkan slippage aset sejenis.</p>
+                    </div>
+                    <a href="#" class="mt-6 inline-flex items-center text-sm font-semibold text-blue-400 group-hover:text-blue-300">Trade Now <span class="ml-1 transition-transform group-hover:translate-x-1">→</span></a>
+                </div>
+                <!-- Product Card 2: Yield Optimizer -->
+                <div class="group border border-gray-800/80 bg-gray-900/20 hover:bg-gray-900/40 p-8 rounded-2xl transition-all duration-300 hover:border-cyan-500/30 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                            <svg xmlns="http://w3.org" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">ZONIQ Yield Optimizer</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Sistem pintar otomatisasi panen (auto-compounding). Anda cukup menaruh aset satu kali, kontrak kami akan bekerja melipatgandakan keuntungan Anda secara mandiri tanpa biaya transaksi berulang.</p>
+                    </div>
+                    <a href="#" class="mt-6 inline-flex items-center text-sm font-semibold text-cyan-400 group-hover:text-cyan-300">Invest Now <span class="ml-1 transition-transform group-hover:translate-x-1">→</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- VE-TOKENOMICS & REAL YIELD SECTION -->
+        <section class="max-w-7xl mx-auto px-6 py-16 border-t border-gray-900">
+            <div class="bg-gradient-to-br from-gray-900/60 to-gray-900/20 border border-gray-800 p-8 md:p-12 rounded-3xl grid md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-1 space-y-4">
+                    <h3 class="text-2xl font-bold text-white sm:text-3xl">Lock $ZNQ, Earn Revenue</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Kami tidak menerbitkan inflasi token tanpa nilai. Dapatkan hak suara tata kelola protokol dan bagikan hasil pendapatan riil dari platform.
+                    </p>
+                </div>
+                <!-- Alur Kerja Interaktif -->
+                <div class="md:col-span-2 grid sm:grid-cols-3 gap-6">
+                    <div class="bg-[#0b0f19]/60 border border-gray-800 p-5 rounded-2xl space-y-2">
+                        <span class="text-xs font-bold text-blue-500 uppercase">Step 1</span>
+                        <h4 class="font-semibold text-white text-sm">Buy $ZNQ Token</h4>
+                        <p class="text-xs text-gray-400">Dapatkan token utilitas eksklusif $ZNQ langsung di pasar utama Base.</p>
+                    </div>
+                    <div class="bg-[#0b0f19]/60 border border-gray-800 p-5 rounded-2xl space-y-2">
+                        <span class="text-xs font-bold text-blue-500 uppercase">Step 2</span>
+                        <h4 class="font-semibold text-white text-sm">Lock into veZNQ</h4>
+                        <p class="text-xs text-gray-400">Kunci koin Anda dari durasi 1 minggu hingga 4 tahun untuk mengamankan hak suara.</p>
+                    </div>
+                    <div class="bg-[#0b0f19]/60 border border-blue-500/20 bg-blue-500/5 p-5 rounded-2xl space-y-2">
+                        <span class="text-xs font-bold text-cyan-400 uppercase">Step 3</span>
+                        <h4 class="font-semibold text-white text-sm text-cyan-400">Earn USDC Yield</h4>
+                        <p class="text-xs text-gray-300">Klaim porsi bagi hasil pendapatan riil sebesar 70% dari akumulasi fee platform.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Strategic Roadmap -->
-        <section class="roadmap-section">
-            <h2>Peta Jalan Strategis</h2>
-            <p class="roadmap-subtitle" id="rm-sub">Lini masa rencana eksekusi dan pengembangan ekosistem Zoniq Finance secara global.</p>
-            <div class="timeline">
-                <div class="timeline-container left">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Kuartal 1</span>
-                        <h3>Fondasi &amp; Pengamanan</h3>
-                        <ul class="roadmap-list">
-                            <li>Audit keamanan smart contract token $ZNQ.</li>
-                            <li>Peluncuran situs resmi &amp; One-Pager.</li>
-                            <li>Penerbitan token di jaringan uji coba (Testnet).</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="timeline-container right">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Kuartal 2</span>
-                        <h3>Akses &amp; Likuiditas</h3>
-                        <ul class="roadmap-list">
-                            <li>Integrasi masuk aplikasi via akun sosial/email.</li>
-                            <li>Peluncuran token di jaringan utama (Mainnet DEX).</li>
-                            <li>Pembukaan program staking awal &amp; hadiah insentif.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="timeline-container left">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Kuartal 3</span>
-                        <h3>Protokol RWA &amp; Agunan</h3>
-                        <ul class="roadmap-list">
-                            <li>Tokenisasi aset dunia nyata (RWA) gelombang pertama.</li>
-                            <li>Peluncuran modul Jaminan Silang (Cross-Collateral).</li>
-                            <li>Kemitraan dengan penyedia kustodian fisik teregulasi.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="timeline-container right">
-                    <div class="roadmap-box">
-                        <span class="q-badge">Kuartal 4</span>
-                        <h3>Ekspansi &amp; Skala Massal</h3>
-                        <ul class="roadmap-list">
-                            <li>Pendaftaran token $ZNQ di bursa kripto global (CEX).</li>
-                            <li>Fitur bayar biaya gas langsung dengan USDC/USDT.</li>
-                            <li>Transisi penuh ke sistem tata kelola komunitas (DAO).</li>
-                        </ul>
-                    </div>
-                </div>
+        <!-- SECURITY & BADGES SECTION -->
+        <section class="max-w-7xl mx-auto px-6 py-12 flex flex-wrap gap-8 items-center justify-center border-t border-gray-900 text-xs font-medium text-gray-500 uppercase tracking-widest">
+            <div class="flex items-center space-x-2 border border-gray-800 px-4 py-2 rounded-xl bg-gray-900/10">
+                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                <span>🛡️ Audited Smart Contracts</span>
+            </div>
+            <div class="flex items-center space-x-2 border border-gray-800 px-4 py-2 rounded-xl bg-gray-900/10">
+                <span>🔑 3-of-5 Gnosis Multi-Sig</span>
+            </div>
+            <div class="flex items-center space-x-2 border border-gray-800 px-4 py-2 rounded-xl bg-gray-900/10">
+                <span>⏱️ 48-Hour Timelock Enforced</span>
             </div>
         </section>
-    </div>
+    </main>
 
-    <!-- ================= GLOBAL FOOTER ================= -->
-    <footer>
-        <div class="copyright">&copy; 2026 Zoniq Finance. All rights reserved.</div>
-        <div>
-            <a href="terms.html" id="tosLink" class="footer-link">Terms of Service</a>
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-900 bg-[#070a12]/60 py-8">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+            <p>&copy; 2026 ZONIQ Finance. Built on Base Ecosystem.</p>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="hover:text-white transition-colors">Twitter (X)</a>
+                <a href="#" class="hover:text-white transition-colors">Discord</a>
+                <a href="#" class="hover:text-white transition-colors">GitHub</a>
+                <a href="#" class="hover:text-white transition-colors">BaseScan</a>
+            </div>
         </div>
     </footer>
-
-</div>
-
-<script>
-    // COOKIE MANAGEMENT ENGINE
-    function setCookie(name, value, days) {
-        let expires = "";
-        if (days) {
-            let date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict";
-    }
-
-    function getCookie(name) {
-        let nameEQ = name + "=";
-        let ca = document.cookie.split(';');
-        for(let i=0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-
-    function applyLanguage(lang) {
-        const toggle = document.getElementById('langToggle');
-        const sectId = document.getElementById('sect-id');
-        const sectEn = document.getElementById('sect-en');
-        const tosLink = document.getElementById('tosLink');
-
-        if (lang === 'id') {
-            toggle.classList.remove('active-en');
-            toggle.classList.add('active-id');
-            sectId.classList.remove('hidden');
-            sectEn.classList.add('hidden');
-            tosLink.innerText = "Ketentuan Layanan";
-        } else {
-            toggle.classList.remove('active-id');
-            toggle.classList.add('active-en');
-            sectId.classList.add('hidden');
-            sectEn.classList.remove('hidden');
-            tosLink.innerText = "Terms of Service";
-        }
-    }
-
-    // TOGGLE ENGINE
-    function toggleLanguage() {
-        const toggle = document.getElementById('langToggle');
-        let targetLang = toggle.classList.contains('active-en') ? 'id' : 'en';
-        applyLanguage(targetLang);
-        setCookie('oniq_lang', targetLang, 30);
-    }
-
-    window.onload = function() {
-        let savedLang = getCookie('oniq_lang');
-        applyLanguage(savedLang ? savedLang : 'en');
-    };
-</script>
 
 </body>
 </html>
