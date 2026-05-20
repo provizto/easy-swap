@@ -37,7 +37,7 @@
             padding: 20px;
         }
 
-        /* --- BACKGROUND CONTENT MOCKUP (DEX/YIELD PREVIEW) --- */
+        /* --- BACKGROUND CONTENT MOCKUP --- */
         .bg-mockup {
             position: absolute;
             width: 100%;
@@ -71,7 +71,7 @@
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        /* --- KUSTOM TOMBOL BAHASA (PERSI KAYA GAMBAR) --- */
+        /* --- KUSTOM TOMBOL BAHASA --- */
         .lang-wrapper {
             position: absolute;
             top: 25px;
@@ -184,6 +184,7 @@
             border: 1px solid #232d3f;
             padding: 6px;
             border-radius: 12px;
+            margin-bottom: 25px; /* Memberi ruang untuk tombol back home */
         }
 
         .notify-input {
@@ -214,11 +215,45 @@
             transform: scale(1.02);
             box-shadow: 0 0 25px var(--shadow-glow);
         }
+
+        /* --- TOMBOL BACK TO HOME (KUSTOM DESIGN) --- */
+        .btn-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid #232d3f;
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-back-home:hover {
+            border-color: var(--secondary);
+            color: var(--text-main);
+            background: rgba(157, 78, 221, 0.05);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.15);
+        }
+
+        /* Simbol tanda panah kiri kustom menggunakan CSS */
+        .icon-back-arrow {
+            width: 6px;
+            height: 6px;
+            border-bottom: 2px solid currentColor;
+            border-left: 2px solid currentColor;
+            transform: rotate(45deg);
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
-    <!-- REPRODUKSI PREVIEW BLURRED DI BELAKANG (BIAR KEREN) -->
+    <!-- BACKGROUND CONTENT MOCKUP -->
     <div class="bg-mockup">
         <h2 style="font-size:50px;">ZoniqFi DEX / Yield Optimizer App Dashboard</h2>
         <p style="margin-top:20px;">0x7a...2b9d | Total Value Locked: $12,450,000</p>
@@ -240,7 +275,7 @@
             </div>
         </div>
 
-        <!-- TEXT CONTENT (DEFAULT ENGLISH) -->
+        <!-- TEXT CONTENT -->
         <div class="brand-badge">ZoniqFi Protocol</div>
         <h1 class="main-heading" id="txtHeading">Coming Soon!</h1>
         <p class="sub-text" id="txtSub">Our high-performance DEX and automated Yield Optimizer are undergoing final security audits. Leave your email to get notified exactly when we launch on Mainnet.</p>
@@ -251,17 +286,24 @@
             <button class="btn-submit" id="btnSubmit" onclick="submitEmail()">Notify Me</button>
         </div>
 
+        <!-- TOMBOL BACK TO HOME (PENGGUNAAN TAG LINK & REDIRECTION) -->
+        <a href="index.html" class="btn-back-home" id="btnBackHome">
+            <span class="icon-back-arrow"></span>
+            <span id="txtBackHome">Back to Home</span>
+        </a>
+
     </div>
 
     <!-- JAVASCRIPT TRANSLATION LOGIC -->
     <script>
-        // Kamus Bahasa (EN secara default di awal)
+        // Kamus Bahasa (Ditambahkan entri baru untuk teks tombol kembali)
         const dictionary = {
             en: {
                 heading: "Coming Soon!",
                 sub: "Our high-performance DEX and automated Yield Optimizer are undergoing final security audits. Leave your email to get notified exactly when we launch on Mainnet.",
                 placeholder: "Enter your email address",
                 btn: "Notify Me",
+                backHome: "Back to Home",
                 alert: "Thank you! We will notify you at: "
             },
             id: {
@@ -269,6 +311,7 @@
                 sub: "Platform DEX berkinerja tinggi dan Yield Optimizer otomatis kami sedang dalam tahap audit keamanan akhir. Tinggalkan email Anda untuk mendapatkan notifikasi instan saat kami resmi meluncur di Mainnet.",
                 placeholder: "Masukkan alamat email Anda",
                 btn: "Kabari Saya",
+                backHome: "Kembali ke Beranda",
                 alert: "Terima kasih! Kami akan mengabari Anda di: "
             }
         };
@@ -284,16 +327,17 @@
             currentLang = lang;
             document.getElementById("currentLangTxt").innerText = lang.toUpperCase();
             
-            // Set Highlight Menu Aktif (Warna Biru Khas)
+            // Set Highlight Menu Aktif
             document.getElementById("opt-en").classList.remove("active");
             document.getElementById("opt-id").classList.remove("active");
             document.getElementById("opt-" + lang).classList.add("active");
 
-            // Update Teks Dom Halaman
+            // Update Teks DOM Halaman
             document.getElementById("txtHeading").innerText = dictionary[lang].heading;
             document.getElementById("txtSub").innerText = dictionary[lang].sub;
             document.getElementById("inputEmail").placeholder = dictionary[lang].placeholder;
             document.getElementById("btnSubmit").innerText = dictionary[lang].btn;
+            document.getElementById("txtBackHome").innerText = dictionary[lang].backHome; // Update teks back home
 
             toggleDropdown();
         }
