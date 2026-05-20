@@ -244,9 +244,24 @@
             background: linear-gradient(45deg, var(--primary), #00b395);
             color: #0b0e14; font-size: 15px; font-weight: 700; cursor: pointer;
             box-shadow: 0 0 15px var(--shadow-glow);
+            margin-bottom: 12px; /* Ditambahkan jeda bawah untuk memisahkan dengan tombol FAQ */
         }
 
         .btn-claim:disabled { background: #232d3f; color: var(--text-muted); box-shadow: none; cursor: not-allowed; }
+
+        /* Gaya Khusus untuk Tombol FAQ */
+        .btn-faq {
+            width: 100%; padding: 12px; border-radius: 8px;
+            background: transparent;
+            color: var(--text-main); font-size: 14px; font-weight: 600; cursor: pointer;
+            border: 1px solid var(--secondary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-faq:hover {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.15), transparent);
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.1);
+        }
 
         @media (max-width: 900px) { .dashboard-container { grid-template-columns: 1fr; } }
     </style>
@@ -325,6 +340,7 @@
                     </div>
                 </div>
                 <button class="btn-claim" id="lblBtnClaim" onclick="alert('Claim success!')">Claim Rewards</button>
+                <button class="btn-faq" id="lblBtnFaq" onclick="alert('FAQ Page coming soon!')">FAQ & Project Info</button>
             </div>
         </div>
 
@@ -348,6 +364,7 @@
                 statActive: "Terverifikasi Valid/Aktif",
                 statPending: "Komisi Tertahan (Pending)",
                 btnClaim: "Klaim Hadiah",
+                btnFaq: "ℹ️ FAQ Proyek", // Terjemahan tombol FAQ Bahasa Indonesia
                 copy: "Salin Link",
                 copied: "Tersalin! ✔",
                 mStart: "Mulai",
@@ -369,6 +386,7 @@
                 statActive: "Verified Valid/Active",
                 statPending: "Pending Commission",
                 btnClaim: "Claim Rewards",
+                btnFaq: "ℹ️ Project FAQ", // Terjemahan tombol FAQ Bahasa Inggris
                 copy: "Copy Link",
                 copied: "Copied! ✔",
                 mStart: "Start",
@@ -376,11 +394,9 @@
             }
         };
 
-        // Mengubah inisialisasi awal ke 'en'
         let currentLang = 'en';
         let currentRole = 'regular';
 
-        // DATABASE SIMULASI DATA UNTUK DITAMPILKAN DI TABEL
         const tableData = {
             regular: {
                 id: `
@@ -423,7 +439,6 @@
         function updateUI() {
             const langData = dictionary[currentLang];
             
-            // Perbarui Elemen Teks Statis
             document.getElementById("txtTier").innerText = langData.tier;
             document.getElementById("btnRoleReg").innerText = langData.btnReg;
             document.getElementById("btnRoleKOL").innerText = langData.btnKOL;
@@ -440,8 +455,8 @@
             document.getElementById("lblStatActive").innerText = langData.statActive;
             document.getElementById("lblStatPending").innerText = langData.statPending;
             document.getElementById("lblBtnClaim").innerText = langData.btnClaim;
+            document.getElementById("lblBtnFaq").innerText = langData.btnFaq; // Memperbarui teks tombol FAQ secara dinamis
 
-            // Perbarui Kondisi Banner Anti-Sybil Berdasarkan Role
             if (currentRole === 'regular') {
                 document.getElementById("lblSybilTitle").innerHTML = langData.sybilRegTitle;
                 document.getElementById("lblSybilList").innerHTML = langData.sybilRegList;
@@ -454,7 +469,6 @@
                 document.getElementById("valActive").innerText = currentLang === 'id' ? "98 Dompet" : "98 Wallets";
             }
 
-            // Suntik Tabel Dinamis
             document.getElementById("tableContainer").innerHTML = tableData[currentRole][currentLang];
         }
 
@@ -484,7 +498,6 @@
             setTimeout(function() { copyBtn.innerText = dictionary[currentLang].copy; }, 2000);
         }
 
-        // Inisialisasi awal saat halaman dimuat
         updateUI();
     </script>
 </body>
