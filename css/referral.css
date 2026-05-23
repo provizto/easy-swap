@@ -1,0 +1,145 @@
+/* Reset & Base Style */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0b0e14;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container Utama */
+.referral-box {
+    background: #151a26;
+    border: 1px solid #242f48;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.brand-header h2 {
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    color: #ffffff;
+}
+
+.brand-header h2 span {
+    color: #00ffcc; /* Warna aksen Zoniq Finance */
+}
+
+.content-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.content-section p {
+    color: #8fa0dd;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Status & Input Card */
+.status-card {
+    background: #1e2538;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 15px;
+    text-align: center;
+    border-left: 4px solid #ff3366;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    flex: 1;
+    background: #0b0e14;
+    border: 1px solid #242f48;
+    padding: 12px;
+    border-radius: 8px;
+    color: #00ffcc;
+    font-size: 14px;
+    outline: none;
+}
+
+/* Tombol-tombol */
+button {
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#btn-copy {
+    background: #00ffcc;
+    color: #0b0e14;
+    border: none;
+    padding: 0 20px;
+    border-radius: 8px;
+}
+
+#btn-copy:hover {
+    background: #00ccaa;
+}
+
+.main-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px solid #00ffcc;
+    color: #00ffcc;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.main-btn:hover {
+    background: #00ffcc;
+    color: #0b0e14;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+}
+
+/* Statistik Grid */
+.stats-grid {
+    display: flex;
+    gap: 15px;
+    border-top: 1px solid #242f48;
+    padding-top: 20px;
+}
+
+.stat-item {
+    flex: 1;
+    background: #1e2538;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat-item h4 {
+    font-size: 12px;
+    color: #8fa0dd;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.stat-item p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+}
