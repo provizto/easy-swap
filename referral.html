@@ -1,49 +1,97 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoniq Finance | Program Referral</title>
-    
-    <link rel="stylesheet" href="css/referral.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" defer></script>
+    <title>ZoniqFi ($ZNF) - Anti-Sybil Multi-Lang Dashboard</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="referral-box">
-        <div class="brand-header">
-            <h2>ZONIQ<span>FINANCE</span></h2>
+    <header>
+        <div class="logo">ZoniqFi<span>.</span></div>
+        <div class="header-controls">
+            <select class="lang-select" id="langSelect" onchange="switchLanguage()">
+                <option value="en" selected>🌐 EN</option>
+                <option value="id">🌐 ID</option>
+            </select>
+            <div class="tier-badge" id="txtTier">💎 Tier 1</div>
+            <button style="background:#151a24; color:white; border:1px solid #232d3f; padding:8px 15px; border-radius:8px; font-size:13px;">0x7a...2b9d</button>
         </div>
-        
-        <div class="content-section">
-            <h3>Bagikan Link & Dapatkan Komisi</h3>
-            <p>Undang teman Anda untuk bergabung dan dapatkan bonus persentase langsung ke wallet Anda.</p>
-            
-            <div id="wallet-status" class="status-card">
-                Status: <span id="connection-text">Wallet Belum Terhubung</span>
-            </div>
+    </header>
 
-            <div class="input-group">
-                <input type="text" id="referral-link" value="https://zoniqfinance.com/referral?ref=0x000..." readonly>
-                <button id="btn-copy" onclick="copyLink()">Salin</button>
-            </div>
-            
-            <button id="btn-connect" class="main-btn">Hubungkan Wallet</button>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-item">
-                <h4>Total Teman</h4>
-                <p id="total-ref">0</p>
-            </div>
-            <div class="stat-item">
-                <h4>Estimasi Bonus</h4>
-                <p id="total-rewards">0.00 USDT</p>
-            </div>
-        </div>
+    <div class="role-switch-container">
+        <button class="btn-role active" id="btnRoleReg" onclick="setRole('regular')">User Reguler</button>
+        <button class="btn-role" id="btnRoleKOL" onclick="setRole('kol')">KOL / Influencer</button>
     </div>
 
-    <script src="js/referral.js"></script>
+    <main class="dashboard-container">
+        
+        <div class="left-section">
+            
+            <div class="sybil-banner">
+                <h4 id="lblSybilTitle">🛡️ Aturan Perlindungan Anti-Sybil (Reguler)</h4>
+                <ul id="lblSybilList">
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" id="lblCardLink">🔗 Tautan Rujukan Anda</div>
+                <div class="input-group">
+                    <input type="text" class="input-field" value="https://zoniqfinance.com/referral.html" readonly id="refLink">
+                    <button class="btn-copy" onclick="copyLink()" id="btnCopy">Copy Link</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title" id="lblCardMilestone">🎁 Klaim Hadiah Berbasis Milestone</div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-fill"></div>
+                    <div class="checkpoint claimed" style="left: 0%;"><div class="checkpoint-dot">✓</div><span id="mStart">Mulai</span></div>
+                    <div class="checkpoint claimed" style="left: 30%;"><div class="checkpoint-dot">🎁</div><span id="m1">3 Teman</span></div>
+                    <div class="checkpoint active" style="left: 65%;"><div class="checkpoint-dot">🔒</div><span id="m2">10 Teman</span></div>
+                    <div class="checkpoint" style="left: 100%;"><div class="checkpoint-dot">🔒</div><span id="m3">25 Teman</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title" id="lblCardHistory">👥 Riwayat Rujukan Terdeteksi</div>
+                <div id="tableContainer">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right-section">
+            <div class="card">
+                <div class="card-title" id="lblCardSummary">📊 Rangkuman Akun</div>
+                <div class="stats-list">
+                    <div class="stat-box">
+                        <div class="stat-label" id="lblStatClicks">Total Tautan Diklik</div>
+                        <div class="stat-value" id="valClicks">5 Dompet</div>
+                    </div>
+                    <div class="stat-box" style="border-left: 3px solid var(--primary);">
+                        <div class="stat-label" id="lblStatActive">Terverifikasi Valid/Aktif</div>
+                        <div class="stat-value" id="valActive" style="color: var(--primary);">3 Dompet</div>
+                    </div>
+                    <div class="stat-box" style="border-left: 3px solid var(--warning);">
+                        <div class="stat-label" id="lblStatPending">Komisi Tertahan (Pending)</div>
+                        <div class="stat-value" id="valPending" style="color: var(--warning);">75.00 $ZNF</div>
+                    </div>
+                </div>
+                <button class="btn-claim" id="lblBtnClaim" onclick="alert('Claim success!')">Claim Rewards</button>
+                <button class="btn-faq" id="lblBtnFaq" onclick="window.location.href='referral-faq.html'">FAQ & Project Info</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <a href="/" class="btn-back-home" id="lblBackHome">← Back to Home</a>
+        <div id="lblCopyright">© 2026 ZoniqFi. All rights reserved.</div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
