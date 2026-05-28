@@ -416,3 +416,32 @@ body {
         background-color: #00f2fe;
     }
 }
+
+.nav-socials {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.nav-socials a {
+    font-size: 18px; /* Memperbesar ukuran ikon */
+    color: #9ca3af;
+    transition: color 0.3s, transform 0.3s, text-shadow 0.3s;
+}
+
+.nav-socials a:hover {
+    color: #00f2fe;
+    transform: translateY(-2px); /* Efek sedikit melompat ke atas */
+    text-shadow: 0 0 10px #00f2fe;
+}
+
+/* Sesuaikan tampilan saat di layar HP agar tetap rapi */
+@media screen and (max-width: 768px) {
+    .nav-socials {
+        justify-content: center;
+        padding: 15px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        margin-left: 0;
+    }
+}
