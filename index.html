@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoniqFi - System Verification</title>
+    <style>
+        /* Pengaturan Dasar & Efek Cyberpunk */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #030712; 
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Elemen Dekorasi Cahaya Ambient (Glow Background) */
+        .bg-glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .glow-1 {
+            background: #00f2fe; 
+            top: 10%;
+            left: -10%;
+        }
+        .glow-2 {
+            background: #4facfe; 
+            bottom: 10%;
+            right: -10%;
+        }
+
+        /* Container Aplikasi */
+        .app-container {
+            width: 100%;
+            max-width: 460px;
+            padding: 20px;
+            text-align: center;
+            z-index: 1; 
+        }
+
+        /* Gaya Tipografi & Logo */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .logo-icon {
+            font-size: 24px;
+            color: #00f2fe;
+            text-shadow: 0 0 10px #00f2fe;
+            animation: pulse 2s infinite alternate;
+        }
+        .logo-text {
+            font-weight: 800;
+            letter-spacing: 2px;
+            font-size: 18px;
+        }
+        .logo-text .highlight {
+            color: #00f2fe;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            background: linear-gradient(to right, #ffffff, #b5b5b5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Efek Kaca Transparan & Animasi Loading Progresif */
+        .swap-card {
+            background: rgba(17, 24, 39, 0.7); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 
+                        0 0 40px rgba(0, 242, 254, 0.05); 
+            padding: 40px 24px;
+            margin-bottom: 24px;
+            height: 460px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        /* Animasi Loader Lingkaran Futuristik */
+        .loader-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 30px;
+        }
+
+        .loader-circle {
+            width: 100%;
+            height: 100%;
+            border: 4px solid rgba(255, 255, 255, 0.03);
+            border-top: 4px solid #00f2fe;
+            border-right: 4px solid #4facfe;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .loader-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #00f2fe;
+            text-shadow: 0 0 8px #00f2fe;
+            animation: blink 1s infinite alternate;
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0 0 12px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .status-desc {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin: 0;
+            max-width: 320px;
+        }
+
+        /* Batas Loading Teks */
+        .loading-text-flow {
+            margin-top: 25px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00f2fe;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+
+        /* Disclaimer Footer */
+        .disclaimer {
+            font-size: 11px;
+            color: #9ca3af; 
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+        .tos-link {
+            color: #00f2fe;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* STYLE SYSTEM WINDOW MODAL (TOS) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 9999; 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: #0d111c;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+        }
+        .modal-header {
+            background: #161b26;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .modal-header h2 {
+            font-size: 16px;
+            margin: 0;
+            color: #00f2fe;
+        }
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .close-btn:hover { color: #ffffff; }
+        .modal-body {
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+        .modal-body h3 {
+            font-size: 14px;
+            color: #ffffff;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .modal-body p { margin: 0 0 10px 0; }
+        .modal-footer {
+            padding: 15px 20px;
+            background: #161b26;
+            text-align: right;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .action-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            padding: 10px 20px;
+            color: #000000;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .action-btn:hover { transform: scale(1.03); }
+
+        /* Animasi Keyframes */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes blink {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Responsif HP */
+        @media screen and (max-width: 480px) {
+            .app-container { padding: 10px; }
+            header h1 { font-size: 22px; }
+            header p { font-size: 12px; margin-bottom: 20px; }
+            .swap-card {
+                height: 440px; 
+                padding: 30px 16px;  
+                border-radius: 20px; 
+            }
+            .disclaimer { font-size: 10px; padding: 0 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo-container">
+                <span class="logo-icon">✦</span>
+                <span class="logo-text">ZONIQ<span class="highlight">FI</span></span>
+            </div>
+            <h1>Next-Gen Token Exchange</h1>
+            <p>Akses likuiditas global instan dengan keamanan enkripsi terdesentralisasi tingkat tinggi.</p>
+        </header>
+
+        <div class="swap-card">
+            <div class="loader-container">
+                <div class="loader-circle"></div>
+                <div class="loader-icon">⚡</div>
+            </div>
+            <h2 class="status-title">System Verification in Progress</h2>
+            <p class="status-desc">
+                Antarmuka agregator likuiditas global SwapSpace sedang dikonfigurasi dan diverifikasi secara aman untuk domain Anda.
+            </p>
+            <div class="loading-text-flow" id="changing-text">Securing Endpoint...</div>
+        </div>
+
+        <footer>
+            <p class="disclaimer">
+                *Platform ini murni bertindak sebagai UI Provider. Dengan bertransaksi, Anda menyetujui 
+                <a href="javascript:void(0);" id="open-tos" class="tos-link">Ketentuan Layanan Hukum</a> kami.
+            </p>
+        </footer>
+    </div>
+
+    <div id="tos-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Ketentuan Layanan & Pelepasan Tanggung Jawab</h2>
+                <span id="close-tos" class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>1. Status Hukum Platform</h3>
+                <p>Zoniq Finance (<b>zoniqfinance.com</b>) murni beroperasi sebagai <i>Non-Custodial Decentralized Exchange Interface</i> (Penyedia Antarmuka Grafis). Platform ini bukan merupakan pedagang aset kripto, bursa efek, atau penyedia lembaga keuangan terpusat. Seluruh fungsi pertukaran (swap) dieksekusi secara otomatis oleh protokol pihak ketiga terdesentralisasi melalui agregator API SwapSpace.</p>
+                
+                <h3>2. Ketiadaan Penguasaan Aset (Non-Custodial)</h3>
+                <p>Kami tidak pernah mengumpulkan, menerima, menyimpan, atau menguasai kunci privat (<i>private keys</i>) maupun aset kripto milik pengguna. Pengguna bertanggung jawab penuh atas keamanan dompet digital (<i>crypto wallet</i>) masing-masing.</p>
+                
+                <h3>3. Pelepasan Risiko Pasar & Teknis</h3>
+                <p>Zoniq Finance tidak bertanggung jawab atas kerugian finansial akibat volatilitas harga aset kripto di pasar, kegagalan transaksi, gangguan jaringan blockchain (<i>gas fee</i> tertahan), atau <i>exploit/bug</i> pada smart contract pihak ketiga.</p>
+                
+                <h3>4. Kepatuhan Regulasi & Pajak Mandiri</h3>
+                <p>Layanan ini tidak ditujukan untuk digunakan di yurisdiksi yang melarang transaksi aset digital. Pengguna wajib mematuhi hukum perpajakan yang berlaku di wilayah hukum masing-masing (termasuk PMK 68/2022 untuk yurisdiksi Indonesia) secara mandiri (<i>self-assessment</i>).</p>
+            </div>
+            <div class="modal-footer">
+                <button id="accept-tos-btn" class="action-btn">Saya Mengerti & Setuju</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Zoniq Finance Processing Screen Initialized.");
+
+            // 1. Logika Operasional Modal ToS
+            const modal = document.getElementById("tos-modal");
+            const openBtn = document.getElementById("open-tos");
+            const closeBtn = document.getElementById("close-tos");
+            const acceptBtn = document.getElementById("accept-tos-btn");
+
+            if (openBtn && modal) {
+                openBtn.onclick = function(e) {
+                    e.preventDefault();
+                    modal.classList.add("active");
+                };
+            }
+
+            if (closeBtn) {
+                closeBtn.onclick = function() {
+                    modal.classList.remove("active");
+                };
+            }
+
+            if (acceptBtn) {
+                acceptBtn.onclick = function() {
+                    modal.classList.remove("active");
+                };
+            }
+
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.classList.remove("active");
+                }
+            };
+
+            // 2. Efek Animasi Teks Logika Jaringan Berubah Alternatif
+            const phrases = [
+                "Securing Endpoint...",
+                "Connecting API Gateways...",
+                "Syncing Liquidity Pools...",
+                "Awaiting Team Review..."
+            ];
+            let currentIdx = 0;
+            const textElement = document.getElementById("changing-text");
+            
+            setInterval(() => {
+                currentIdx = (currentIdx + 1) % phrases.length;
+                if(textElement) {
+                    textElement.textContent = phrases[currentIdx];
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
