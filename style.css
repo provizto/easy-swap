@@ -241,3 +241,178 @@ header p {
     }
     .disclaimer { font-size: 10px; padding: 0 5px; }
 }
+
+/* ==========================================
+   STYLE NAVIGASI MENU UTAMA (CYBER GLASS)
+   ========================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(9, 13, 26, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 999;
+    box-sizing: border-box;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Identitas Logo di Menu */
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-badge {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(79, 172, 254, 0.05));
+    border: 1px solid #00f2fe;
+    color: #00f2fe;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-shadow: 0 0 5px #00f2fe;
+}
+
+.logo-txt {
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    font-size: 16px;
+}
+
+.logo-txt .hl {
+    color: #00f2fe;
+}
+
+/* Daftar Tautan Menu */
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #00f2fe;
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+}
+
+/* Tombol Akses Khusus (GitHub) */
+.nav-links .nav-btn {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.2) 100%);
+    border: 1px solid #00f2fe;
+    padding: 8px 18px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+}
+
+.nav-links .nav-btn:hover {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #000000;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    text-shadow: none;
+}
+
+/* Pengaturan Tombol Hamburger Mobile */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-toggle .bar {
+    width: 22px;
+    height: 2px;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+/* Jarak Tambahan untuk Isi Web agar Tidak Tertutup Menu */
+body {
+    padding-top: 70px;
+}
+
+/* ==========================================
+   RESPONSIF LAYAR HP / TABLET (MOBILE MENU)
+   ========================================== */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(9, 13, 26, 0.95);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        flex-direction: column;
+        gap: 0;
+        padding: 10px 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+    }
+
+    .nav-links.active {
+        max-height: 300px;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 15px 0;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    }
+    
+    .nav-links .nav-btn {
+        border: none;
+        border-radius: 0;
+        background: none;
+    }
+    
+    /* Efek Animasi Tombol Hamburger Menjadi Tanda Silang (X) */
+    .menu-toggle.open .bar:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+        background-color: #00f2fe;
+    }
+    .menu-toggle.open .bar:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.open .bar:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+        background-color: #00f2fe;
+    }
+}
