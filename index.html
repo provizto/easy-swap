@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,7 @@
     <nav class="navbar">
     <div class="nav-container">
         <div class="nav-logo">
-            <span class="logo-badge"></span>
+            <span class="logo-badge">ES</span>
             <span class="logo-txt">Easy<span class="hl">Swap</span></span>
         </div>
         
@@ -52,7 +52,7 @@
                 <span class="logo-text">Easy<span class="highlight">Swap</span></span>
             </div>
             <h1>Next-Gen Token Exchange</h1>
-            <p>Akses likuiditas global instan dengan keamanan enkripsi terdesentralisasi tingkat tinggi.</p>
+            <p>Access instant global liquidity with high-level decentralized encryption security.</p>
         </header>
 
         <div class="swap-card">
@@ -60,15 +60,14 @@
                 src="https://swapspace.co/widget?link_id=zoniqfi&transparent=true&theme=dark&amount=0.1&from=eth&to=usdt&direction=from" 
                 style="width: 100%; height: 100%; border: none;"
                 title="DEX Swap Widget">
-             stream
             </iframe>
         </div>
 
     <footer>
     <p class="footer-copyright">&copy; 2026 <span class="hl">Easy Swap</span>. All Rights Reserved.</p>
     <p class="disclaimer">
-                *Platform ini murni bertindak sebagai UI Provider. Dengan bertransaksi, Anda menyetujui 
-                <a href="#" id="open-tos" class="tos-link">Ketentuan Layanan Hukum</a> kami.
+                *This platform acts purely as a UI Provider. By transacting, you agree to our 
+                <a href="#" id="open-tos" class="tos-link">Legal Terms of Service</a>.
             </p>
 </footer>
     </div>
@@ -76,37 +75,37 @@
     <div id="tos-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Ketentuan Layanan & Pelepasan Tanggung Jawab</h2>
+                <h2>Terms of Service & Disclaimer</h2>
                 <span id="close-tos" class="close-btn">&times;</span>
             </div>
             <div class="modal-body">
-                <h3>1. Status Hukum Platform</h3>
-                <p>Easy Swap (<b>https://provizto.github.io/easy-swap</b>) murni beroperasi sebagai <i>Non-Custodial Decentralized Exchange Interface</i> (Penyedia Antarmuka Grafis). Platform ini bukan merupakan pedagang aset kripto, bursa efek, atau penyedia lembaga keuangan terpusat. Seluruh fungsi pertukaran (swap) dieksekusi secara otomatis oleh protokol pihak ketiga terdesentralisasi melalui agregator API SwapSpace.</p>
+                <h3>1. Legal Status of the Platform</h3>
+                <p>Easy Swap (<b>https://provizto.github.io/easy-swap</b>) operates purely as a <i>Non-Custodial Decentralized Exchange Interface</i> (Graphical Interface Provider). This platform is not a crypto asset trader, stock exchange, or centralized financial institution provider. All exchange (swap) functions are executed automatically by decentralized third-party protocols through the SwapSpace API aggregator.</p>
                 
-                <h3>2. Ketiadaan Penguasaan Aset (Non-Custodial)</h3>
-                <p>Kami tidak pernah mengumpulkan, menerima, menyimpan, atau menguasai kunci privat (<i>private keys</i>) maupun aset kripto milik pengguna. Pengguna bertanggung jawab penuh atas keamanan dompet digital (<i>crypto wallet</i>) masing-masing.</p>
+                <h3>2. Absence of Asset Control (Non-Custodial)</h3>
+                <p>We never collect, receive, store, or control private keys or users' crypto assets. Users are fully responsible for the security of their respective digital wallets (<i>crypto wallets</i>).</p>
                 
-                <h3>3. Pelepasan Risiko Pasar & Teknis</h3>
-                <p>Zoniq Finance tidak bertanggung jawab atas kerugian finansial akibat volatilitas harga aset kripto di pasar, kegagalan transaksi, gangguan jaringan blockchain (<i>gas fee</i> tertahan), atau <i>exploit/bug</i> pada smart contract pihak ketiga.</p>
+                <h3>3. Limitation of Market & Technical Risks</h3>
+                <p>Zoniq Finance is not responsible for financial losses resulting from crypto asset price volatility in the market, transaction failures, blockchain network disruptions (stuck gas fees), or exploits/bugs in third-party smart contracts.</p>
                 
-                <h3>4. Kepatuhan Regulasi & Pajak Mandiri</h3>
-                <p>Layanan ini tidak ditujukan untuk digunakan di yurisdiksi yang melarang transaksi aset digital. Pengguna wajib mematuhi hukum perpajakan yang berlaku di wilayah hukum masing-masing (termasuk PMK 68/2022 untuk yurisdiksi Indonesia) secara mandiri (<i>self-assessment</i>).</p>
+                <h3>4. Regulatory Compliance & Self-Assessment Tax</h3>
+                <p>This service is not intended for use in jurisdictions that prohibit digital asset transactions. Users are required to comply with applicable tax laws in their respective jurisdictions (including PMK 68/2022 for Indonesian jurisdiction, if applicable) on a self-assessment basis.</p>
             </div>
             <div class="modal-footer">
-                <button id="accept-tos-btn" class="action-btn">Saya Mengerti & Setuju</button>
+                <button id="accept-tos-btn" class="action-btn">I Understand & Agree</button>
             </div>
         </div>
     </div>
 
     <script src="app.js"></script>
     <script>
-        // Mendaftarkan Service Worker untuk fitur install PWA Android
+        // Registering Service Worker for Android PWA install feature
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                    console.log('ServiceWorker registrasi berhasil: ', registration.scope);
+                    console.log('ServiceWorker registration successful: ', registration.scope);
                 }, function(err) {
-                    console.log('ServiceWorker registrasi gagal: ', err);
+                    console.log('ServiceWorker registration failed: ', err);
                 });
             });
         }
